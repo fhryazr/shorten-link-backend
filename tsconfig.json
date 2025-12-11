@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2016",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  // "compilerOptions": {
+  //   "module": "commonjs",
+  //   "moduleResolution": "node",
+  //   "target": "ES2023",
+  //   "strict": true,
+  //   "esModuleInterop": true
+  // },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
