@@ -46,6 +46,10 @@ export class ShortenService {
     return this.repo.update(id, data);
   }
 
+  async deleteLink(shortCode: string) {
+    return this.repo.delete(shortCode);
+  }
+
   private generateShortCode(): string {
     const shortCodeLength = 6
     const shortCode = nanoid(shortCodeLength);

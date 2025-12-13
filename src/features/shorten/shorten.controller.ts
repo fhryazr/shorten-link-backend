@@ -49,8 +49,18 @@ export class ShortenController {
       }
 
       const updatedLink: ShortenResponseDTO = await this.shortenService.updateLink(id, data);
-      console.log(updatedLink)
       return res.status(200).json(updatedLink);
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  deleteLink = async (req: Request<{ shortCode: string }>, res: Response) => {
+    try {
+      const { shortCode } = req.params;
+      await this.shortenService.deleteLink(shortCode);
+      return res.status(200).json({ message: "Link deleted successfully" });
     } catch (error) {
       console.log(error)
       res.status(500).json({ message: "Internal Server Error" });

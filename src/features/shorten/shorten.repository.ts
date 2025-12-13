@@ -40,4 +40,10 @@ export class ShortenRepository {
       }
     });
   }
+
+  async delete(shortCode: string) {
+    return prisma.link.delete({
+      where: { shortCode }
+    });
+  }
 }
