@@ -63,4 +63,17 @@ export class ShortenRepository {
       }
     });
   }
+
+  async countLinks() {
+    return prisma.link.count();
+  }
+
+  async countTotalClicks() {
+    const result = await prisma.link.aggregate({
+      _sum: {
+        accessCount: true
+      }
+    });
+    return result._sum.accessCount || 0;
+  }
 }
