@@ -27,6 +27,12 @@ export class ShortenRepository {
     return links;
   }
 
+  async getByShortCode(shortCode: string) {
+    return prisma.link.findUnique({
+      where: { shortCode }
+    })
+  }
+
   async create(data: Link) {
     return prisma.link.create({ data })
   }
@@ -44,6 +50,17 @@ export class ShortenRepository {
   async delete(shortCode: string) {
     return prisma.link.delete({
       where: { shortCode }
+    });
+  }
+
+  async incrementAccessCount(id: string) {
+    return prisma.link.update({
+      where: { id },
+      data: {
+        accessCount: {
+          increment: 1
+        }
+      }
     });
   }
 }

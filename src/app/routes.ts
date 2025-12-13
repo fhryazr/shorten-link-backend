@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import shortenRouter from "../features/shorten/shorten.router"
+import redirectRouter from "../features/redirect/redirect.router"
 
 const router = Router();
 
@@ -8,5 +9,6 @@ router.get("/", (req: Request, res: Response) => {
 })
 
 router.use("/links", shortenRouter);
+router.use(redirectRouter);
 
 export default router;
