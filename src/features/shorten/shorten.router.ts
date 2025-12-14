@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ShortenController } from "./shorten.controller";
-import { validate, validateAll } from "../../middleware/validate";
+import { validateRequestBody, validateRequestParams, validateRequestQuery } from "../../middleware/validate";
 import { getShortenSchema } from "./dtos/get-shorten.dto";
 import { createShortenSchema } from "./dtos/create-shorten.dto";
 import { idParamSchema, shortCodeParamSchema } from "./dtos/shorten-response.dto";
@@ -9,9 +9,9 @@ import { idParamSchema, shortCodeParamSchema } from "./dtos/shorten-response.dto
 const router = Router();
 const controller = new ShortenController();
 
-router.get("/", validate(getShortenSchema, "query"), controller.getLinks)
-router.post("/", validate(createShortenSchema, "body"), controller.createLink)
-router.patch("/:id", validateAll({ params: idParamSchema, body: createShortenSchema }), controller.updateLink)
-router.delete("/:shortCode", validate(shortCodeParamSchema, "params"), controller.deleteLink)
+router.get("/", validateRequestQuery(getShortenSchema), controller.getLinks)
+router.post("/", validateRequestBody(createShortenSchema), controller.createLink)
+router.patch("/:id", validateRequestParams(idParamSchema), validateRequestBody(createShortenSchema), controller.updateLink)
+router.delete("/:shortCode", validateRequestParams(shortCodeParamSchema), controller.deleteLink)
 
 export default router;

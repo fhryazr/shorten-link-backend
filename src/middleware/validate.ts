@@ -1,56 +1,37 @@
-import { Request, Response, NextFunction } from "express";
-import { z, ZodType } from "zod";
+import { RequestHandler } from 'express';
+import { ZodType, z } from 'zod';
 
-type ValidationTarget = 'body' | 'query' | 'params';
-
-/**
- * Generic validation middleware
- * @param schema - Zod schema untuk validasi
- * @param target - Target validasi: 'body', 'query', atau 'params'
- */
-
-export const validate = <T extends ZodType>(
-  schema: T,
-  target: ValidationTarget = 'body'
-) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const parsed = schema.safeParse(req[target]);
-
-    if (!parsed.success) {
-      return res.status(400).json({
-        message: "Validation error",
-        errors: parsed.error.flatten().fieldErrors
-      });
-    }
-
-    // Replace dengan data yang sudah tervalidasi
-    req[target] = parsed.data;
-    next();
-  };
-};
-
-// Helper untuk validasi multiple targets sekaligus
-export const validateAll = (schemas: {
-  body?: ZodType;
-  query?: ZodType;
-  params?: ZodType;
-}) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const targets = Object.entries(schemas) as [ValidationTarget, ZodType][];
-
-    for (const [target, schema] of targets) {
-      const parsed = schema.safeParse(req[target]);
-
-      if (!parsed.success) {
-        return res.status(400).json({
-          message: `Validation error in ${target}`,
-          errors: parsed.error.flatten().fieldErrors
+const validate = (
+  schema: ZodType,
+  source: 'body' | 'params' | 'query'
+): RequestHandler => {
+  return async (req, res, next) => {
+    try {
+      await schema.parseAsync(req[source]);
+      next();
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        res.status(400).json({
+          message: `Invalid ${source} schema`,
+          errors: err.issues[0],
         });
+      } else {
+        next(err);
       }
-
-      req[target] = parsed.data;
     }
-
-    next();
   };
 };
+
+const validateRequestBody = (schema: ZodType): RequestHandler => {
+  return validate(schema, 'body');
+};
+
+const validateRequestParams = (schema: ZodType): RequestHandler => {
+  return validate(schema, 'params');
+};
+
+const validateRequestQuery = (schema: ZodType): RequestHandler => {
+  return validate(schema, 'query');
+};
+
+export { validateRequestBody, validateRequestParams, validateRequestQuery };
