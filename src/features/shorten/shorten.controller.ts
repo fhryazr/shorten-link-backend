@@ -10,7 +10,8 @@ export class ShortenController {
 
   getLinks = async (req: Request<{}, {}, {}, GetShortenDTO>, res: Response) => {
     try {
-      const data: ShortenResponseDTO[] = await this.shortenService.getLinks(req.query);
+      const query = (req as any)?.validatedQuery;
+      const data: ShortenResponseDTO[] = await this.shortenService.getLinks(query);
       return res.status(200).json(data);
     } catch (error) {
       console.log(error)
