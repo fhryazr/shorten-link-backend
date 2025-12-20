@@ -8,10 +8,8 @@ import { GetShortenDTO, ShortenSortOrder } from "./dtos/get-shorten.dto";
 export class ShortenService {
   private repo = new ShortenRepository();
 
-  async getLinks(dto: GetShortenDTO): Promise<Link[]> {
+  async getLinks(dto: GetShortenDTO, userId?: string): Promise<Link[]> {
     const { search, sort, limit } = dto;
-    const userId = "BVQ2sPBFCNwIEcm3Di6XsdKCr1A7ZtGzBVQ2sPBFCNwIEcm3Di6XsdKCr1A7ZtGz"
-    console.log(typeof userId);
 
     let orderBy: { [key: string]: 'asc' | 'desc' } | undefined;
 
@@ -32,10 +30,10 @@ export class ShortenService {
     }, userId);
   }
 
-  async createLink(dto: CreateShortenDTO): Promise<Link> {
+  async createLink(dto: CreateShortenDTO, userId?: string): Promise<Link> {
     const newLink: Link = {
       id: createId(),
-      userId: dto.userId,
+      userId: userId as string,
       url: dto.url,
       shortCode: this.generateShortCode(),
       accessCount: 0,

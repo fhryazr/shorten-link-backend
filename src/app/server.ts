@@ -1,12 +1,22 @@
 import express from "express";
 import router from "./routes";
-import { corsMiddleware } from "../middleware/cors";
 import { apiLimiter } from "../middleware/rate-limiter";
+import cors from "cors";
+
+import { auth } from "../lib/auth";
+import { toNodeHandler } from "better-auth/node";
 
 const app = express();
 
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  credentials: true,
+}));
+
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
 app.use(express.json());
-app.use(corsMiddleware);
 app.use(apiLimiter);
 
 app.use("/api", router)

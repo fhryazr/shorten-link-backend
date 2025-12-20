@@ -11,7 +11,8 @@ export class ShortenController {
   getLinks = async (req: Request<{}, {}, {}, GetShortenDTO>, res: Response) => {
     try {
       const query = (req as any)?.validatedQuery;
-      const data: ShortenResponseDTO[] = await this.shortenService.getLinks(query);
+      const userId = req.user?.id;
+      const data: ShortenResponseDTO[] = await this.shortenService.getLinks(query, userId);
       return res.status(200).json(data);
     } catch (error) {
       console.log(error)
@@ -21,7 +22,8 @@ export class ShortenController {
 
   createLink = async (req: Request<{}, {}, CreateShortenDTO>, res: Response) => {
     try {
-      const newLink: ShortenResponseDTO = await this.shortenService.createLink(req.body);
+      const userId = req.user?.id;
+      const newLink: ShortenResponseDTO = await this.shortenService.createLink(req.body, userId);
       return res.status(201).json(newLink);
     } catch (error) {
       console.log(error)

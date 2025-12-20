@@ -4,14 +4,15 @@ import { validateRequestBody, validateRequestParams, validateRequestQuery } from
 import { getShortenSchema } from "./dtos/get-shorten.dto";
 import { createShortenSchema } from "./dtos/create-shorten.dto";
 import { idParamSchema, shortCodeParamSchema } from "./dtos/shorten-response.dto";
+import { requireAuth } from "../../middleware/auth";
 
 
 const router = Router();
 const controller = new ShortenController();
 
-router.get("/", validateRequestQuery(getShortenSchema), controller.getLinks)
-router.post("/", validateRequestBody(createShortenSchema), controller.createLink)
-router.patch("/:id", validateRequestParams(idParamSchema), validateRequestBody(createShortenSchema), controller.updateLink)
-router.delete("/:shortCode", validateRequestParams(shortCodeParamSchema), controller.deleteLink)
+router.get("/", requireAuth, validateRequestQuery(getShortenSchema), controller.getLinks)
+router.post("/", requireAuth, validateRequestBody(createShortenSchema), controller.createLink)
+router.patch("/:id", requireAuth, validateRequestParams(idParamSchema), validateRequestBody(createShortenSchema), controller.updateLink)
+router.delete("/:shortCode", requireAuth, validateRequestParams(shortCodeParamSchema), controller.deleteLink)
 
 export default router;
