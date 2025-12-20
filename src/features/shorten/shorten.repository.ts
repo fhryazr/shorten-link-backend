@@ -74,12 +74,19 @@ export class ShortenRepository {
     });
   }
 
-  async countLinks() {
-    return prisma.link.count();
+  async countLinks(userId?: string) {
+    return prisma.link.count({
+      where: {
+        userId: userId
+      }
+    });
   }
 
-  async countTotalClicks() {
+  async countTotalClicks(userId?: string) {
     const result = await prisma.link.aggregate({
+      where: {
+        userId: userId
+      },
       _sum: {
         accessCount: true
       }

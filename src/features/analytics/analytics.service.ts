@@ -4,9 +4,9 @@ import { AnalyticsResponseDTO } from "./dto/analytics-response.dto";
 export class AnalyticsService {
   private repo = new ShortenRepository();
 
-  async getAnalyticsOverview(): Promise<AnalyticsResponseDTO> {
-    const totalLinks = await this.repo.countLinks();
-    const totalClicks = await this.repo.countTotalClicks();
+  async getAnalyticsOverview(userId?: string): Promise<AnalyticsResponseDTO> {
+    const totalLinks = await this.repo.countLinks(userId);
+    const totalClicks = await this.repo.countTotalClicks(userId);
 
     return {
       totalLinks,

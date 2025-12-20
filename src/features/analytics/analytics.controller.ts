@@ -6,7 +6,8 @@ export class AnalyticsController {
 
   getOverview = async (req: Request, res: Response) => {
     try {
-      const analyticsDataOverview = await this.analyticsService.getAnalyticsOverview();
+      const userId = req.user?.id;
+      const analyticsDataOverview = await this.analyticsService.getAnalyticsOverview(userId);
       return res.status(200).json(analyticsDataOverview);
     } catch (error) {
       console.log(error)
